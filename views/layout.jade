@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/css/style.css')
+    //script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
+  body
+    block content

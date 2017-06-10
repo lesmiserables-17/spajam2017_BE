@@ -1,0 +1,64 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  ul#messages
+  input#text
+  button#button Send
+  button#join Join
+  button#attack Attack
+  button#defence Defence
+  script.
+    var socket = io();
+    var user_id = "";
+
+    $("#join").click(function(){
+      // 生成する文字列の長さ
+      var l = 8;
+
+      // 生成する文字列に含める文字セット
+      var c = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+      var cl = c.length;
+      for(var i=0; i<l; i++){
+        user_id += c[Math.floor(Math.random()*cl)];
+      }
+      socket.emit('join', user_id);
+      $("#messages").append("<li>"+user_id+"</li>")
+      $("#text").val("").focus()
+    });
+
+    $("#attack").click(function(){
+      socket.emit('attack', user_id);
+    });
+
+    $("#defence").click(function(){
+      socket.emit('defence', user_id);
+    });
+
+    /*socket.on('join', function(text) {
+      $("#messages").append("<li>"+text+"</li>")
+    });*/
+
+    socket.on('start', function(text) {
+      $("#messages").append("<li>Start</li>")
+    });
+
+    socket.on('status', function(data) {
+      console.log(user_id);
+      $("#messages").append("<li>"+data[user_id]+"</li>")
+    });
+
+    socket.on('result', function(data) {
+      $("#messages").append("<li>Score: "+data[user_id]+"</li>")
+    });
+
+
+    /*$("#button").click(function(){
+      socket.emit('C_to_S_message', $("#text").val());
+      $("#text").val("").focus()
+    });
+    socket.on('S_to_C_message', function(text) {
+      $("#messages").append("<li>"+text+"</li>")
+    });*/
