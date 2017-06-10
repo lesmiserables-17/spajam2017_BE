@@ -1,6 +1,6 @@
 exports.socketUtil = function(io) {
-  var judge_time = 1000;
-  var result_time = 20000;
+  var judge_time = 700;
+  var result_time = 30000;
   var start_flg = 0;
   // {userid: score}
   users = {};
@@ -26,6 +26,9 @@ exports.socketUtil = function(io) {
         //socket.broadcast.emit("start", null);
       }
     });
+
+    //早切り
+    
 
     //atack
     socket.on("attack", function (user_id) {
@@ -106,6 +109,11 @@ exports.socketUtil = function(io) {
       // attack * defence
       if(attack == 1 && defence == 1) {
         for(user_id in status){
+          // 得点の判定
+          if(status[user_id] == "defence") {
+            // 得点の判定
+            users[user_id] += 10;
+          }
           status[user_id] = "guard";
         }
       }
@@ -135,7 +143,7 @@ exports.socketUtil = function(io) {
       if(attack == 1 && none == 1) {
         for(user_id in status){
           if(status[user_id] == "attack") {
-            // 特典の判定
+            // 得点の判定
             users[user_id] += 10;
             status[user_id] = "None";
           } else {
