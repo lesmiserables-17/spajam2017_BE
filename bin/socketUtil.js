@@ -65,8 +65,7 @@ exports.socketUtil = function(io) {
       var max_score = -1;
       var max_user = "";
       
-      [].forEach(
-        Object.keys(users),
+      Object.keys(users).forEach(
         function(key){
           var score = users[key];
           if (max_score < score) {
@@ -76,10 +75,9 @@ exports.socketUtil = function(io) {
         }
       );
       
-      var result_data = [];
+      var result_data = Object();
       
-      [].forEach(
-        Object.keys(users),
+      Object.keys(users).forEach(
         function(key){
           result_data[key] = (users[key] == max_score);
         }
