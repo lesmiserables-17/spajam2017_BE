@@ -62,8 +62,31 @@ exports.socketUtil = function(io) {
 
     //結果を返す
     function result() {
+      var max_score = -1;
+      var max_user = "";
+      
+      [].forEach(
+        Object.keys(users),
+        function(key){
+          var score = users[key];
+          if (max_score < score) {
+            max_score = score;
+            max_user = key;
+          }
+        }
+      );
+      
+      var result_data = [];
+      
+      [].forEach(
+        Object.keys(users),
+        function(key){
+          result_data[key] = (users[key] == max_score);
+        }
+      );
+      
       console.log(users);
-      io.sockets.emit("result", users);
+      io.sockets.emit("result", result_data);
       init();
     }
 
