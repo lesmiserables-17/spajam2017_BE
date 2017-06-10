@@ -1,7 +1,8 @@
 exports.socketUtil = function(io) {
-  var judge_time = 700;
-  var result_time = 30000;
+  var judge_time = 300;
+  var result_time = 20000;
   var start_flg = 0;
+  var speed_flg = 0;
   // {userid: score}
   users = {};
   // {userid: "None"}
@@ -9,26 +10,43 @@ exports.socketUtil = function(io) {
   io.on('connection', function(socket){
     console.log('a user connected');
     //join & start
-    socket.on("join", function (user_id) {
-      //TODO 2人以上繋がったときのエラーハンドリング
+    socket.on("join", function (data) {
+      console.log(data);
+      var user_id = data.user_id;
+      var mode = data.mode;
       if(Object.keys(users).length < 2){
         users[user_id] = 0;
         status[user_id] = "None";
-        console.log(user_id);
-        //io.sockets.emit("join", user_id);
       }
       //start
-      if(Object.keys(users).length == 2 && !start_flg){
+      if(Object.keys(users).length == 2 && !start_flg && mode == "chambara"){
         console.log("start");
         start_flg = 1;
         io.sockets.emit("start", null);
         setTimeout(result, result_time);
         //socket.broadcast.emit("start", null);
       }
+      //speed_start
+      if(Object.keys(users).length == 2 && !speed_flg && mode == "speed"){
+        console.log("speed_start");
+        speed_flg = 1;
+        var date = new Date();
+        var interval = Math.floor(Math.random()*(10-3)+3);
+        console.log(interval);
+        date = date.setSeconds(date.getSeconds()+interval);
+        date = new Date(date);
+        console.log(date.getTime().toString());
+        io.sockets.emit("speed_start", date.getTime().toString());
+      }
     });
 
-    //早切り
-    
+    socket.on("speed_attack", function (user_id) {
+      if (speed_flg) {
+        console.log("speed_attack: "+user_id);
+        users[user_id] = 100;
+        result();
+      }
+    });
 
     //atack
     socket.on("attack", function (user_id) {
@@ -60,6 +78,7 @@ exports.socketUtil = function(io) {
       users = {};
       status = {};
       start_flg = 0;
+      speed_flg = 0;
     }
 
     //結果を返す
