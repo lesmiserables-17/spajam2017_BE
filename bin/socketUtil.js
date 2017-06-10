@@ -1,6 +1,6 @@
 exports.socketUtil = function(io) {
   var judge_time = 1000;
-  var result_time = 10000;
+  var result_time = 20000;
   var start_flg = 0;
   // {userid: score}
   users = {};
@@ -57,7 +57,6 @@ exports.socketUtil = function(io) {
       users = {};
       status = {};
       start_flg = 0;
-      timrer = "";
     }
 
     //結果を返す
@@ -85,7 +84,7 @@ exports.socketUtil = function(io) {
       
       console.log(users);
       io.sockets.emit("result", result_data);
-      init();
+      //init();
     }
 
     //statusを返すための関数
