@@ -9,6 +9,8 @@ block content
   button#join Join
   button#attack Attack
   button#defence Defence
+  button#speed_start s_start
+  button#speed_attack s_attack
   script.
     var socket = io();
     var user_id = "";
@@ -24,9 +26,17 @@ block content
       for(var i=0; i<l; i++){
         user_id += c[Math.floor(Math.random()*cl)];
       }
-      socket.emit('join', user_id);
+      socket.emit('join', {"mode": "speed", "user_id": user_id});
       $("#messages").append("<li>"+user_id+"</li>")
       $("#text").val("").focus()
+    });
+
+    $("#speed_start").click(function(){
+      socket.emit('speed_start', user_id);
+    });
+
+    $("#speed_attack").click(function(){
+      socket.emit('speed_attack', user_id);
     });
 
     $("#attack").click(function(){
